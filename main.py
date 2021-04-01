@@ -53,6 +53,34 @@ class DataBase:
             menu = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
         return
 
+    def menu2(self):
+        menu2 = input("Выберите пункт меню: \n 1) Студент 2) Успеваемость 3) Предметы\n ")
+        while True:
+            if menu2 == "1":
+                self.autorization()
+            elif menu2 == "2":
+                self.registration()
+            elif menu2 == "3":
+                self.delete()
+            else:
+                print("Такой команды нет!")
+            menu2 = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
+        return
+
+    def menu3(self):
+        menu3 = input("Выберите пункт меню: \n 1) Преподаватель 2) Добавить студента 3) Удаление студента\n ")
+        while True:
+            if menu3 == "1":
+                self.autorization()
+            elif menu3 == "2":
+                self.registration()
+            elif menu3 == "3":
+                self.delete()
+            else:
+                print("Такой команды нет!")
+            menu3 = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
+        return
+
     def registration(self):
         login = input("Login: ")
         password = input("Password: ")
@@ -86,18 +114,25 @@ class DataBase:
 
     def autorization(self):
         login = input("Login: ")
-        sql = f"SELECT password FROM users WHERE login='{login}'"
+        sql = f"SELECT password, type FROM users WHERE login='{login}'"
         self.cursors.execute(sql)
         self.connection.commit()
         data = self.cursors.fetchone()  # {'password': '44a34d475e43395047ae67c20a1024f2'}
         password_input = input("Password: ")  # Пароль, введенный пользователем
         hash_password = data.get('password')  # Значение ячейки password
         b = password_input.encode('utf-8')  # b'44a34d475e43395047ae67c20a1024f2'
-        hash2 = hashlib.md5(b)  # Пароль, введенный пользователем <md5 _hashlib.HASH object @ 0x0000020942076F90>
+        hash2 = hashlib.md5(b)
         if hash_password == hash2.hexdigest():
             print("Вы авторизованы")
         else:
             print("Пароль неправильный")
+        type = data.get('type')
+        if type == "S":
+            self.menu2()
+        else:
+            self.menu3()
+
+
 
     def delete(self):
         number = input("Введите ID ")
