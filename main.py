@@ -40,45 +40,59 @@ class DataBase:
         print(data)
 
     def menu1(self):
-        menu = input("Выберите пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n ")
+        menu = input("Выберите пункт меню: \n 1) Авторизация 2) Регистрация\n ")
         while True:
             if menu == "1":
                 self.autorization()
             elif menu == "2":
                 self.registration()
-            elif menu == "3":
-                self.delete()
             else:
                 print("Такой команды нет!")
             menu = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
         return
 
     def menu2(self):
-        menu2 = input("Выберите пункт меню: \n 1) Студент 2) Успеваемость 3) Предметы\n ")
+        menu2 = input("Выберите пункт меню: \n 1) Инфо о себе 2) Фамилия/имя 3) Средний бал\n "
+                      "4) Номер группы 5) Инфо о предметах\n ")
         while True:
             if menu2 == "1":
-                self.autorization()
-            elif menu2 == "2":
-                self.registration()
+                self.student()
+            if menu2 == "2":
+                self.surname_name()
             elif menu2 == "3":
-                self.delete()
+                self.score()
+            elif menu2 == "4":
+                self.group_n()
+            elif menu2 == "5":
+                self.info_subjects()
             else:
                 print("Такой команды нет!")
-            menu2 = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
+            menu2 = input("Выберите пункт меню: \n 1) Инфо о себе 2) Фамилия/имя 3) Средний бал\n "
+                      "4) Номер группы 5) Инфо о предметах\n ")
         return
 
     def menu3(self):
-        menu3 = input("Выберите пункт меню: \n 1) Преподаватель 2) Добавить студента 3) Удаление студента\n ")
+        menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
+                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку\n ")
         while True:
             if menu3 == "1":
-                self.autorization()
+                self.info_students()
             elif menu3 == "2":
-                self.registration()
+                self.student()
             elif menu3 == "3":
-                self.delete()
+                self.add_student()
+            elif menu3 == "3":
+                self.add_student()
+            elif menu3 == "4":
+                self.add_teacher()
+            elif menu3 == "5":
+                self.add_score()
+            elif menu3 == "6":
+                self.change_score()
             else:
                 print("Такой команды нет!")
-            menu3 = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
+            menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
+                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку\n ")
         return
 
     def registration(self):
@@ -133,7 +147,6 @@ class DataBase:
             self.menu3()
 
 
-
     def delete(self):
         number = input("Введите ID ")
         sql = f"DELETE FROM users WHERE id={number}"
@@ -145,6 +158,46 @@ class DataBase:
         self.cursors(sql, [login])
         data = self.cursors.fetchall()
         return data["password"]
+
+    #Полномочия преподавателя
+    def info_students(self):
+        print("информация заблокирована")
+        return
+    def student(self):
+        print("информация заблокирована")
+        return
+    def add_student(self):
+        print("информация заблокирована")
+        return
+    def add_student(self):
+        print("информация заблокирована")
+        return
+    def add_teacher(self):
+        print("информация заблокирована")
+        return
+    def add_score(self):
+        print("информация заблокирована")
+        return
+    def change_score(self):
+        print("информация заблокирована")
+        return
+
+    # Полномочия студента
+    def student(self):
+        print("информация заблокирована")
+        return
+    def surname_name(self):
+        print("информация заблокирована")
+        return
+    def score(self):
+        print("информация заблокирована")
+        return
+    def group_n(self):
+        print("информация заблокирована")
+        return
+    def info_subjects(self):
+        print("информация заблокирована")
+        return
 
 
 #login = input("Login: ")
