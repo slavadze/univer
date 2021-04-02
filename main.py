@@ -53,7 +53,7 @@ class DataBase:
 
     def menu2(self):
         menu2 = input("Выберите пункт меню: \n 1) Инфо о себе 2) Фамилия/имя 3) Средний бал\n "
-                      "4) Номер группы 5) Инфо о предметах\n ")
+                      "4) Номер группы 5) Инфо о предметах 6) Главное меню\n ")
         while True:
             if menu2 == "1":
                 self.student()
@@ -65,6 +65,8 @@ class DataBase:
                 self.group_n()
             elif menu2 == "5":
                 self.info_subjects()
+            elif menu2 == "6":
+                self.menu1()
             else:
                 print("Такой команды нет!")
             menu2 = input("Выберите пункт меню: \n 1) Инфо о себе 2) Фамилия/имя 3) Средний бал\n "
@@ -73,7 +75,7 @@ class DataBase:
 
     def menu3(self):
         menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
-                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку\n ")
+                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку 7) Главное меню\n ")
         while True:
             if menu3 == "1":
                 self.info_students()
@@ -89,6 +91,8 @@ class DataBase:
                 self.add_score()
             elif menu3 == "6":
                 self.change_score()
+            elif menu3 == "7":
+                self.menu1()
             else:
                 print("Такой команды нет!")
             menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
@@ -164,8 +168,14 @@ class DataBase:
         print("информация заблокирована")
         return
     def student(self):
-        print("информация заблокирована")
-        return
+        surname = input("Surname: ")
+        sql = f"SELECT name, surname, groupN, faculty FROM users WHERE surname='{surname}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        info = data.get('name' + 'surname')
+        print(info)
+
     def add_student(self):
         print("информация заблокирована")
         return
@@ -183,9 +193,6 @@ class DataBase:
         return
 
     # Полномочия студента
-    def student(self):
-        print("информация заблокирована")
-        return
     def surname_name(self):
         print("информация заблокирована")
         return
