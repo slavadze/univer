@@ -70,7 +70,7 @@ class DataBase:
             else:
                 print("Такой команды нет!")
             menu2 = input("Выберите пункт меню: \n 1) Инфо о себе 2) Фамилия/имя 3) Средний бал\n "
-                      "4) Номер группы 5) Инфо о предметах\n ")
+                      "4) Номер группы 5) Инфо о предметах 6) Главное меню\n ")
         return
 
     def menu3(self):
@@ -96,7 +96,7 @@ class DataBase:
             else:
                 print("Такой команды нет!")
             menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
-                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку\n ")
+                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку 7) Главное меню\n ")
         return
 
     def registration(self):
@@ -117,7 +117,8 @@ class DataBase:
             surname = input("Surname: ")
             faculty = input('Faculty: ')
             groupN = input('group №: ')
-            sql2 = f"INSERT INTO users (id, login, password, type, name, surname, faculty, groupN) VALUES ('NULL', '{login}', '{password2}', '{type2}', '{name}', '{surname}', '{faculty}', '{groupN}') "
+            sql2 = f"INSERT INTO users (id, login, password, type, name, surname, faculty, groupN) VALUES " \
+                   f"('NULL', '{login}', '{password2}', '{type}', '{name}', '{surname}', '{faculty}', '{groupN}') "
             self.cursors.execute(sql2)
             self.connection.commit()
         if type == "T":
@@ -126,13 +127,13 @@ class DataBase:
             faculty = input('Faculty: ')
             subject = input('Subject: ')
             sql3 = f"INSERT INTO users (id, login, password, type, name, surname, faculty, subject) VALUES " \
-                   f"('NULL', '{login}', '{password2}', '{type2}', '{name}', '{surname}', '{faculty}', '{subject}')"
+                   f"('NULL', '{login}', '{password2}', '{type}', '{name}', '{surname}', '{faculty}', '{subject}')"
             self.cursors.execute(sql3)
             self.connection.commit()
 
     def autorization(self):
-        login = input("Login: ")
-        sql = f"SELECT password, type FROM users WHERE login='{login}'"
+        self.login = input("Login: ")
+        sql = f"SELECT password, type FROM users WHERE login='{self.login}'"
         self.cursors.execute(sql)
         self.connection.commit()
         data = self.cursors.fetchone()  # {'password': '44a34d475e43395047ae67c20a1024f2'}
@@ -165,26 +166,30 @@ class DataBase:
 
     #Полномочия преподавателя
     def info_students(self):
-        print("информация заблокирована")
-        return
+        sql = f"SELECT name, surname, faculty, groupN FROM users WHERE type='S'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        while True:
+            data = self.cursors.fetchone()
+            if data:
+                print(data.get('name'), data.get('surname'), data.get('faculty'), data.get('groupN'))
+            else:
+                break
+
     def student(self):
         surname = input("Surname: ")
         sql = f"SELECT name, surname, groupN, faculty FROM users WHERE surname='{surname}'"
         self.cursors.execute(sql)
         self.connection.commit()
         data = self.cursors.fetchone()
-        info = data.get('name' + 'surname')
-        print(info)
+        print(data.get('name'), data.get('surname'), data.get('faculty'), data.get('groupN'))
 
     def add_student(self):
-        print("информация заблокирована")
-        return
-    def add_student(self):
-        print("информация заблокирована")
-        return
+        self.registration()
+
     def add_teacher(self):
-        print("информация заблокирована")
-        return
+        self.registration()
+
     def add_score(self):
         print("информация заблокирована")
         return
@@ -194,14 +199,24 @@ class DataBase:
 
     # Полномочия студента
     def surname_name(self):
-        print("информация заблокирована")
-        return
+        sql = f"SELECT name, surname FROM users WHERE login='{self.login}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        print(data.get('name')+ ' ' + data.get('surname'))
+
     def score(self):
         print("информация заблокирована")
         return
+
     def group_n(self):
-        print("информация заблокирована")
-        return
+        sql = f"SELECT groupN FROM users WHERE login='{self.login}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        info = data.get('groupN')
+        print("Группа: №" + str(info))
+
     def info_subjects(self):
         print("информация заблокирована")
         return
@@ -211,5 +226,6 @@ class DataBase:
 #password = input("Password: ")
 db = DataBase()
 #dbPassword = db.get_password(login)
-munu1 = db.menu1()
+#munu1 = db.menu1()
 #aaa =db.registration()
+a = db.autorization()
