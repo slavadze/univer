@@ -154,7 +154,7 @@ class DataBase:
 
     def delete(self):
         number = input("Введите ID ")
-        sql = f"DELETE FROM score WHERE users_id={number}"
+        sql = f"DELETE FROM users WHERE id={number}"
         self.cursors.execute(sql)
         self.connection.commit()
 
@@ -203,13 +203,27 @@ class DataBase:
         self.connection.commit()
         data2 = self.cursors.fetchone()
         subject = data2.get('subject')
-        sql3 = f"UPDATE `score` SET `id`='NULL', `users_id`={id}, `{subject}`='{score}' WHERE `users_id`={id}"
+        sql3 = f"INSERT INTO `score`(`users_id`, `{subject}`) VALUES ('{id}', '{score}')"
         self.cursors.execute(sql3)
         self.connection.commit()
 
     def change_score(self):
-        print("информация заблокирована")
-        return
+        surname = input("Surname: ")
+        newscore = int(input("Score: "))
+        sql = f"SELECT id FROM users WHERE surname='{surname}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        id = data.get('id')
+        sql2 = f"SELECT subject FROM users WHERE login='{self.login}'"
+        self.cursors.execute(sql2)
+        self.connection.commit()
+        data2 = self.cursors.fetchone()
+        subject = data2.get('subject')
+        sql3 = f"UPDATE score SET {subject}={newscore} WHERE users_id={id}"
+        self.cursors.execute(sql3)
+        self.connection.commit()
+        print("оценка изменена")
 
     # Полномочия студента
     def surname_name(self):
@@ -243,4 +257,3 @@ db = DataBase()
 #munu1 = db.menu1()
 #aaa =db.registration()
 a = db.autorization()
-#a = db.delete()
