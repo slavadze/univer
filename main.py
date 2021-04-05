@@ -3,7 +3,6 @@ import pymysql
 from pymysql.cursors import DictCursor
 import hashlib
 
-
 class DataBase:
     def __init__(self):
         self.connection = self.connect()
@@ -40,15 +39,15 @@ class DataBase:
         print(data)
 
     def menu1(self):
-        menu = input("Выберите пункт меню: \n 1) Авторизация 2) Регистрация\n ")
+        menu1 = input("Выберите пункт меню: \n 1) Авторизация 2) Забыли пароль\n ")
         while True:
-            if menu == "1":
+            if menu1 == "1":
                 self.autorization()
-            elif menu == "2":
-                self.registration()
+            elif menu1 == "2":
+                print("Обратитесь к администратору")
             else:
                 print("Такой команды нет!")
-            menu = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Удаление пользователя\n")
+            menu1 = input("Выберете пункт меню: \n 1) Авторизация 2) Забыли пароль\n")
         return
 
     def menu2(self):
@@ -56,7 +55,7 @@ class DataBase:
                       "4) Номер группы 5) Инфо о предметах 6) Главное меню\n ")
         while True:
             if menu2 == "1":
-                self.student()
+                self.about()
             if menu2 == "2":
                 self.surname_name()
             elif menu2 == "3":
@@ -75,7 +74,7 @@ class DataBase:
 
     def menu3(self):
         menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
-                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку 7) Главное меню\n ")
+                      "4) Добавить преподавателя 5) Поставить оценку 6) Изменить оценку 7) Главное меню\n ")
         while True:
             if menu3 == "1":
                 self.info_students()
@@ -96,7 +95,7 @@ class DataBase:
             else:
                 print("Такой команды нет!")
             menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
-                      "4) Добавить преподавателя 5) Поставить оцеку 6) Изменить оценку 7) Главное меню\n ")
+                      "4) Добавить преподавателя 5) Поставить оцекну 6) Изменить оценку 7) Главное меню\n ")
         return
 
     def registration(self):
@@ -133,6 +132,7 @@ class DataBase:
 
     def autorization(self):
         self.login = input("Login: ")
+        #написать функцию проверки логина
         sql = f"SELECT password, type FROM users WHERE login='{self.login}'"
         self.cursors.execute(sql)
         self.connection.commit()
@@ -141,20 +141,21 @@ class DataBase:
         hash_password = data.get('password')  # Значение ячейки password
         b = password_input.encode('utf-8')  # b'44a34d475e43395047ae67c20a1024f2'
         hash2 = hashlib.md5(b)
+        type = data.get('type')
         if hash_password == hash2.hexdigest():
             print("Вы авторизованы")
+            if type == "S":
+                self.menu2()
+            else:
+                self.menu3()
         else:
             print("Пароль неправильный")
-        type = data.get('type')
-        if type == "S":
-            self.menu2()
-        else:
-            self.menu3()
-
+            self.menu1()
 
     def delete(self):
-        number = input("Введите ID ")
-        sql = f"DELETE FROM users WHERE id={number}"
+        number = input("Введите ID: ")
+        table = input("Название таблицы: ")
+        sql = f"DELETE FROM {table} WHERE users_id={number}"
         self.cursors.execute(sql)
         self.connection.commit()
 
@@ -163,6 +164,7 @@ class DataBase:
         self.cursors(sql, [login])
         data = self.cursors.fetchall()
         return data["password"]
+
 
     #Полномочия преподавателя
     def info_students(self):
@@ -226,6 +228,13 @@ class DataBase:
         print("оценка изменена")
 
     # Полномочия студента
+    def about(self):
+        sql = f"SELECT name, surname, groupN, faculty FROM users WHERE login='{self.login}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        print(data.get('name'), data.get('surname'), data.get('faculty'), data.get('groupN'))
+
     def surname_name(self):
         sql = f"SELECT name, surname FROM users WHERE login='{self.login}'"
         self.cursors.execute(sql)
@@ -234,8 +243,17 @@ class DataBase:
         print(data.get('name')+ ' ' + data.get('surname'))
 
     def score(self):
-        print("информация заблокирована")
-        return
+        sql = f"SELECT id FROM users WHERE login='{self.login}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        id = data.get('id')
+        sql2 = f"SELECT subject1, subject2, subject3 FROM score WHERE users_id='{id}'"
+        self.cursors.execute(sql2)
+        self.connection.commit()
+        data2 = self.cursors.fetchall()
+
+        print(data2)
 
     def group_n(self):
         sql = f"SELECT groupN FROM users WHERE login='{self.login}'"
@@ -246,14 +264,23 @@ class DataBase:
         print("Группа: №" + str(info))
 
     def info_subjects(self):
-        print("информация заблокирована")
-        return
+        sql = f"SELECT id FROM users WHERE login='{self.login}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+        data = self.cursors.fetchone()
+        id = data.get('id')
+        sql2 = f"SELECT subject1, subject2, subject3 FROM score WHERE users_id='{id}'"
+        self.cursors.execute(sql2)
+        self.connection.commit()
+        data2 = self.cursors.fetchone()
+        print(data2)
 
 
 #login = input("Login: ")
 #password = input("Password: ")
 db = DataBase()
 #dbPassword = db.get_password(login)
-#munu1 = db.menu1()
+munu1 = db.menu1()
 #aaa =db.registration()
-a = db.autorization()
+#a = db.autorization()
+#l = db.delete()
