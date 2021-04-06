@@ -95,7 +95,7 @@ class DataBase:
             else:
                 print("Такой команды нет!")
             menu3 = input("Выберите пункт меню: \n 1) Информация о студентах 2) Инфо о студенте 3) Добавить студента\n "
-                      "4) Добавить преподавателя 5) Поставить оцекну 6) Изменить оценку 7) Главное меню\n ")
+                      "4) Добавить преподавателя 5) Поставить оценку 6) Изменить оценку 7) Главное меню\n ")
         return
 
     def registration(self):
@@ -116,18 +116,26 @@ class DataBase:
             surname = input("Surname: ")
             faculty = input('Faculty: ')
             groupN = input('group №: ')
-            sql2 = f"INSERT INTO users (id, login, password, type, name, surname, faculty, groupN) VALUES " \
+            sql = f"INSERT INTO users (id, login, password, type, name, surname, faculty, groupN) VALUES " \
                    f"('NULL', '{login}', '{password2}', '{type}', '{name}', '{surname}', '{faculty}', '{groupN}') "
+            self.cursors.execute(sql)
+            self.connection.commit()
+            sql2 = f"SELECT id FROM users WHERE login='{login}'"
             self.cursors.execute(sql2)
+            self.connection.commit()
+            data = self.cursors.fetchone()
+            id = data.get('id')
+            sql3 = f"INSERT INTO score (users_id, subject1, subject2, subject3) VALUES ({id}, NULL, NULL, NULL)"
+            self.cursors.execute(sql3)
             self.connection.commit()
         if type == "T":
             name = input("Name: ")
             surname = input("Surname: ")
             faculty = input('Faculty: ')
             subject = input('Subject: ')
-            sql3 = f"INSERT INTO users (id, login, password, type, name, surname, faculty, subject) VALUES " \
+            sql4 = f"INSERT INTO users (id, login, password, type, name, surname, faculty, subject) VALUES " \
                    f"('NULL', '{login}', '{password2}', '{type}', '{name}', '{surname}', '{faculty}', '{subject}')"
-            self.cursors.execute(sql3)
+            self.cursors.execute(sql4)
             self.connection.commit()
 
     def autorization(self):
@@ -151,13 +159,6 @@ class DataBase:
         else:
             print("Пароль неправильный")
             self.menu1()
-
-    def delete(self):
-        number = input("Введите ID: ")
-        table = input("Название таблицы: ")
-        sql = f"DELETE FROM {table} WHERE users_id={number}"
-        self.cursors.execute(sql)
-        self.connection.commit()
 
     def get_password(self, login):
         sql = "SELECT password FROM users WHERE login=%$"
@@ -205,7 +206,7 @@ class DataBase:
         self.connection.commit()
         data2 = self.cursors.fetchone()
         subject = data2.get('subject')
-        sql3 = f"INSERT INTO `score`(`users_id`, `{subject}`) VALUES ('{id}', '{score}')"
+        sql3 = f"UPDATE `score` SET {subject}={score} WHERE users_id={id}"
         self.cursors.execute(sql3)
         self.connection.commit()
 
@@ -251,8 +252,8 @@ class DataBase:
         sql2 = f"SELECT subject1, subject2, subject3 FROM score WHERE users_id='{id}'"
         self.cursors.execute(sql2)
         self.connection.commit()
-        data2 = self.cursors.fetchall()
-
+        data2 = self.cursors.fetchone()
+        #list = int(data2.get('subject1')) + int(data2.get('subject2')), int(data2.get('subject3'))
         print(data2)
 
     def group_n(self):
@@ -275,12 +276,24 @@ class DataBase:
         data2 = self.cursors.fetchone()
         print(data2)
 
+    def delete(self):
+        number = input("Введите users_ID: ")
+        sql = f"DELETE FROM score WHERE users_id={number}"
+        self.cursors.execute(sql)
+        self.connection.commit()
+
+    def delete2(self):
+        number = input("Введите ID: ")
+        sql = f"DELETE FROM users WHERE id={number}"
+        self.cursors.execute(sql)
+        self.connection.commit()
 
 #login = input("Login: ")
 #password = input("Password: ")
-db = DataBase()
 #dbPassword = db.get_password(login)
-munu1 = db.menu1()
 #aaa =db.registration()
 #a = db.autorization()
-#l = db.delete()
+#l = db.delete2()
+
+db = DataBase()
+munu1 = db.menu1()
