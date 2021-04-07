@@ -253,8 +253,13 @@ class DataBase:
         self.cursors.execute(sql2)
         self.connection.commit()
         data2 = self.cursors.fetchone()
-        #list = int(data2.get('subject1')) + int(data2.get('subject2')), int(data2.get('subject3'))
-        print(data2)
+        ball = 0
+        count = 0
+        for i in data2:
+            if data2[i] != None:
+                ball += int(data2[i])
+                count += 1
+        print('Средний бал: ' + str(ball/count))
 
     def group_n(self):
         sql = f"SELECT groupN FROM users WHERE login='{self.login}'"
@@ -274,7 +279,11 @@ class DataBase:
         self.cursors.execute(sql2)
         self.connection.commit()
         data2 = self.cursors.fetchone()
-        print(data2)
+        for i in data2:
+            if data2[i] == None:
+                print(str(i) + " - оценка не выставлена")
+            else:
+                print(str(i) +" - оценка: " + str(data2[i]))
 
     def delete(self):
         number = input("Введите users_ID: ")
