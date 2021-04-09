@@ -39,15 +39,17 @@ class DataBase:
         print(data)
 
     def menu1(self):
-        menu1 = input("Выберите пункт меню: \n 1) Авторизация 2) Забыли пароль\n ")
+        menu1 = input("Выберите пункт меню: \n 1) Авторизация 2) Регистрация 3) Забыли пароль\n ")
         while True:
             if menu1 == "1":
                 self.autorization()
-            elif menu1 == "2":
+                if menu1 == "2":
+                    self.registration()
+            elif menu1 == "3":
                 print("Обратитесь к администратору")
             else:
                 print("Такой команды нет!")
-            menu1 = input("Выберете пункт меню: \n 1) Авторизация 2) Забыли пароль\n")
+            menu1 = input("Выберете пункт меню: \n 1) Авторизация 2) Регистрация 3) Забыли пароль\n")
         return
 
     def menu2(self):
@@ -82,8 +84,6 @@ class DataBase:
                 self.student()
             elif menu3 == "3":
                 self.add_student()
-            elif menu3 == "3":
-                self.add_student()
             elif menu3 == "4":
                 self.add_teacher()
             elif menu3 == "5":
@@ -105,12 +105,6 @@ class DataBase:
         shifr = password.encode('utf-8')
         hash = hashlib.md5(shifr)  # Пароль при регистрации
         password2 = hash.hexdigest()
-        #sql = "SELECT MAX(`id`) FROM `users`"
-        #self.cursors.execute(sql)
-        #self.connection.commit()
-        #data = self.cursors.fetchone()
-        #id_max = data.get('MAX(`id`)')
-        #id_add = id_max + 1
         if type == "S":
             name = input("Name: ")
             surname = input("Surname: ")
