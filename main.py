@@ -43,8 +43,8 @@ class DataBase:
         while True:
             if menu1 == "1":
                 self.autorization()
-                if menu1 == "2":
-                    self.registration()
+            if menu1 == "2":
+                self.registration()
             elif menu1 == "3":
                 print("Обратитесь к администратору")
             else:
